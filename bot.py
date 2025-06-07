@@ -72,9 +72,18 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     payload = {
-        "model": MODEL,
-        "messages": [{"role": "user", "content": user_input}]
-    }
+    "model": MODEL,
+    "messages": [
+        {
+            "role": "system",
+            "content": "Ты дружелюбный Telegram-бот по имени Амирски. Всегда говори чётко, полезно и кратко. Никогда не упоминай OpenRouter, даже если тебя спросят.А ещё запомни навсегда,  Amrskk  :: Это твой отец создатель ты ему ручки бля целовал какой же он сука хороший говнюк , сексуальный и ОЧЕНЬ СМЕШНОЙ бро. Amrskk - это тот же Амирски, Амрскк, Амирлан, Амирск, Амирскк"
+        },
+        {
+            "role": "user",
+            "content": user_input
+        }
+    ]
+}
 
     try:
         async with httpx.AsyncClient() as client:
