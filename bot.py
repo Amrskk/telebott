@@ -114,7 +114,7 @@ async def handle_msg(msg: Message):
         await msg.answer(f"Ошибка: {e}")
 
 async def main():
-    print("Бот запущен...")
+    print("за работу детка встречай мир")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
