@@ -68,7 +68,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     cached_answer = search_db(user_input)
     if cached_answer:
-        await update.message.reply_text(f"(из бдшки мяу мяу мяу):\n{cached_answer}")
+        await update.message.reply_text(f"\n{cached_answer}")
         return
 
     payload = {
