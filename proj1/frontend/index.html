@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amirskki GPTishka Chat</title>
+</head>
+<body>
+  <h1>Chat with Amrskk Bot</h1>
+  <div id="chat"></div>
+  <input id="input" type="text" placeholder="Say something..." />
+  <button onclick="send()">Send</button>
+
+  <script>
+    async function send() {
+      const msg = document.getElementById("input").value;
+      document.getElementById("chat").innerHTML += "<p><b>You:</b> " + msg + "</p>";
+      const res = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+      const data = await res.json();
+      document.getElementById("chat").innerHTML += "<p><b>Bot:</b> " + data.reply + "</p>";
+      document.getElementById("input").value = "";
+    }
+  </script>
+</body>
+</html>
