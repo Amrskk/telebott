@@ -50,7 +50,6 @@ def search_db(question: str, threshold=0.75):
         return db_data[best_idx]["answer"]
     return None
 
-# --- Основной обработчик сообщений ---
 @dp.message(F.text)
 async def handle_msg(msg: Message):
     user_input = msg.text.strip()
@@ -114,7 +113,6 @@ async def handle_msg(msg: Message):
     except Exception as e:
         await msg.answer(f"Ошибка: {e}")
 
-# --- Запуск ---
 async def main():
     print("Бот запущен...")
     await dp.start_polling(bot)
