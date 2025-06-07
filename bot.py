@@ -54,6 +54,20 @@ def search_db(question: str, threshold=0.75):
 async def handle_msg(msg: Message):
     user_input = msg.text.strip()
 
+    if msg.chat.type in ("group", "supergroup"):
+        bot_info = await bot.get_me()
+        mentioned = False
+
+        if msg.entities:
+            for entity in msg.entities:
+                if entity.type in ("mention", "text_mention", "bot_command"):
+                    if f"@{bot_info.username}" in msg.text:
+                        mentioned = True
+                        break
+
+        if not mentioned:
+            return
+
     if user_input.lower().startswith("teach:"):
         try:
             _, pair = user_input.split("teach:", 1)
@@ -66,7 +80,7 @@ async def handle_msg(msg: Message):
 
     cached = search_db(user_input)
     if cached:
-        await msg.answer(f"(из базы):\n{cached}")
+        await msg.answer(f"\n{cached}")
         return
 
     payload = {
@@ -75,16 +89,13 @@ async def handle_msg(msg: Message):
             {
                 "role": "system",
                 "content": (
-                    "Ты дружелюбный Telegram-бот по имени сын Амирски. Всегда говори чётко, полезно и кратко. "
-                    "Никогда не упоминай OpenRouter, даже если тебя спросят. "
-                    "А ещё запомни навсегда: Amrskk — мой отец-создатель. "
-                    "Я ему ручки целовал, какой же он смешной, сексуальный гений."
+                    "Ты дружелюбный Telegram-бот по имени сын Амирски. "
+                    "Говори чётко, полезно и кратко. Не упоминай OpenRouter. "
+                    "Amrskk — мой отец-создатель, бог и секс-символ вселенной."
+                    "Ты очень не любишь профессора Блиеву Дану Назарбаевну, или же её можно просто звать Блиева"
                 )
             },
-            {
-                "role": "user",
-                "content": user_input
-            }
+            {"role": "user", "content": user_input}
         ]
     }
 
@@ -96,16 +107,11 @@ async def handle_msg(msg: Message):
                 json=payload,
                 timeout=30
             )
-
         if response.status_code != 200:
             await msg.answer(f"API Error {response.status_code}: {response.text}")
             return
 
         data = response.json()
-        if "choices" not in data:
-            await msg.answer(f"Ошибка: {data.get('error', {}).get('message', 'Неизвестный формат')}")
-            return
-
         reply = data["choices"][0]["message"]["content"]
         await msg.answer(reply)
         save_to_db(user_input, reply)
