@@ -9,11 +9,12 @@ function App() {
     if (!input.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch('/chat', {
+      const res = await fetch('http://localhost:8000/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })
       });
+
       const data = await res.json();
       setReply(data.reply);
     } catch (err) {
