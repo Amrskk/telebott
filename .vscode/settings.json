@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": true
+            },
+            "previewLimit": 50,
+            "server": "ep-old-star-a22l0fgh-pooler.eu-central-1.aws.neon.tech",
+            "port": 5432,
+            "driver": "Redshift Driver (Dedicated ver)",
+            "name": "neon",
+            "database": "neondb",
+            "username": "neondb_owner",
+            "password": "npg_Tow97uEgYpAQ"
+        }
+    ]
+}
