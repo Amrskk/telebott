@@ -1,3 +1,5 @@
+console.log("App loaded");
+
 import { useState } from 'react';
 
 function App() {
