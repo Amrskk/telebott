@@ -39,3 +39,7 @@ async def authenticate_user(username: str, password: str):
     if not row:
         return False
     return verify_password(password, row["password_hash"])
+
+def verify_token(token: str):
+    user = decode_token(token)
+    return user
