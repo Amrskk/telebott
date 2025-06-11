@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 function App() {
   const [input, setInput] = useState('');
@@ -14,7 +14,6 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })
       });
-
       const data = await res.json();
       setReply(data.reply);
     } catch (err) {
