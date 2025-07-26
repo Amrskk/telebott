@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, types, F
 from sentence_transformers import SentenceTransformer, util
 from aiogram.types import Message
 
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 TELEGRAM_TOKEN = "7643084537:AAFMp5pvUMSQ6Ixa8LMpGVgAU7J-OO6p610"
 MODEL = "gpt-3.5-turbo"
 DB_FILE = "chat_history.json"
