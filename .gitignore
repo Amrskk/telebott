@@ -1,5 +1,5 @@
-.venv
-.vscode
-proj1
-chat_history.json
-neon.session.sql
+# Ignore everything
+*
+
+# But not this file
+!bot.py
