@@ -1,13 +1,14 @@
 import os
 import json
 import httpx
-import asyncio
+from fastapi import FastAPI, Request
 from aiogram import Bot, Dispatcher, types, F
-from sentence_transformers import SentenceTransformer, util
 from aiogram.types import Message
+from sentence_transformers import SentenceTransformer, util
+import asyncio
 
-OPENROUTER_API_KEY = "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"
-TELEGRAM_TOKEN = "7643084537:AAFMp5pvUMSQ6Ixa8LMpGVgAU7J-OO6p610"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 MODEL = "gpt-3.5-turbo"
 DB_FILE = "chat_history.json"
 
@@ -20,6 +21,9 @@ headers = {
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
+app = FastAPI()
+
+# === DB ===
 
 def load_db():
     if not os.path.exists(DB_FILE):
@@ -50,21 +54,19 @@ def search_db(question: str, threshold=0.75):
         return db_data[best_idx]["answer"]
     return None
 
+# === AI Handler ===
+
 @dp.message(F.text)
 async def handle_msg(msg: Message):
     user_input = msg.text.strip()
 
     if msg.chat.type in ("group", "supergroup"):
         bot_info = await bot.get_me()
-        mentioned = False
-
-        if msg.entities:
-            for entity in msg.entities:
-                if entity.type in ("mention", "text_mention", "bot_command"):
-                    if f"@{bot_info.username}" in msg.text:
-                        mentioned = True
-                        break
-
+        mentioned = any(
+            f"@{bot_info.username}" in msg.text
+            for entity in msg.entities or []
+            if entity.type in ("mention", "text_mention", "bot_command")
+        )
         if not mentioned:
             return
 
@@ -119,9 +121,11 @@ async def handle_msg(msg: Message):
     except Exception as e:
         await msg.answer(f"Ошибка: {e}")
 
-async def main():
-    print("за работу детка встречай мир")
-    await dp.start_polling(bot)
+# === Webhook endpoint ===
 
-if __name__ == "__main__":
-    asyncio.run(main())
+@app.post("/webhook")
+async def telegram_webhook(req: Request):
+    data = await req.json()
+    update = types.Update(**data)
+    await dp.feed_update(bot, update)
+    return {"ok": True}
