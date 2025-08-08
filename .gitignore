@@ -1,0 +1,5 @@
+.venv
+.vscode
+proj1
+chat_history.json
+neon.session.sql
