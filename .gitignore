@@ -4,3 +4,4 @@
 # But keep these files
 !bot.py
 !.gitignore
+!requirements.txt
